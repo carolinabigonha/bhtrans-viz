@@ -14,7 +14,52 @@
 
   // constructs the connection matrix
   bhtransviz.loadMatrix = function() {
-    console.log(bhtransviz.routes);
+
+    for (bus in bhtransviz.routes) {
+
+      // bus number
+      console.log("Linha: " + bhtransviz.routes[bus].key);
+
+      for (origin in bhtransviz.routes[bus].values) {
+
+        // origin
+        console.log("Origem: " + bhtransviz.routes[bus].values[origin].key);
+
+        // stores the previous neighborhoods
+        var previous = []
+
+        for (infoId in bhtransviz.routes[bus].values[origin].values) {
+
+          var info = bhtransviz.routes[bus].values[origin].values[infoId];
+
+          // get neighborhood
+          var neighborhoodList = bhtransviz.neighborhood[info.NOM_LOGR];
+          var neighborhood;
+          if (typeof neighborhoodList !== 'undefined' && neighborhoodList.length > 0) {
+            neighborhood = neighborhoodList[0];
+          }
+          else
+          {
+            continue;
+          }
+
+          // add neighborhood to previous array
+          previous.push(neighborhood);
+
+
+        }
+
+
+      }
+
+    }
+
+
+  }
+
+  // adds a connection from all the previous locations to 'to'
+  bhtransviz.connectToPrevious = function(to, previous) {
+
   }
 
   // adds or updates matrix connections
