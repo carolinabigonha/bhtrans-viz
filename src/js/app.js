@@ -10,7 +10,10 @@
   bhtransviz.routes = {};
 
   // connection between neighborhoods
-  bhtransviz.matrix = {};
+  bhtransviz.matrix = [];
+
+  // connections between neigtborhoods
+  bhtransviz.connections = {};
 
   // constructs the connection matrix
   bhtransviz.loadMatrix = function() {
@@ -65,7 +68,7 @@
         from = id;
       }
 
-      // bhtransviz.addConnection(from,id,bus);
+      bhtransviz.addConnection(from,id,bus);
       newPrevious[id] = true;
     }
 
@@ -77,19 +80,21 @@
   // adds or updates matrix connections
   bhtransviz.addConnection = function(from, to, bus) {
 
-    // create new key if origin is not in the matrix
-    if (!from in bhtransviz.matrix.keys()) {
-      bhtransviz.matrix[from] = {};
+    var conn = [];
+    conn = bhtransviz.connections[from+"#"+to];
+    if(conn === undefined){
+      conn = [];
     }
 
-    // creates a new array if it's the first connection between
-    // origin and destination
-    if (!to in bhtransviz.matrix[from].keys()) {
-      bhtransviz.matrix[from][to] = [];
-    }
+    // conn.push(bus);
+    bhtransviz.connections[from+"#"+to] = bus;
 
-    // append connection
-    bhtransviz.matrix[from][to].push(bus);
+    var object = {};
+    object.from = from;
+    object.to = to;
+    object.options = conn;
+
+    bhtransviz.matrix.push(object);
   }
 
   // draws the visualization
