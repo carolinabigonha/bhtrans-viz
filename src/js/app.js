@@ -17,49 +17,61 @@
 
     for (bus in bhtransviz.routes) {
 
-      // bus number
-      console.log("Linha: " + bhtransviz.routes[bus].key);
+      // bus 
+      var line = bhtransviz.routes[bus].key;
+      console.log("Linha: " + line);
 
-      for (origin in bhtransviz.routes[bus].values) {
-
-        // origin
-        console.log("Origem: " + bhtransviz.routes[bus].values[origin].key);
+      for (origin_id in bhtransviz.routes[bus].values) {
 
         // stores the previous neighborhoods
-        var previous = []
+        var from = null;
+        var previous = {};
 
-        for (infoId in bhtransviz.routes[bus].values[origin].values) {
+        for (infoId in bhtransviz.routes[bus].values[origin_id].values) {
 
-          var info = bhtransviz.routes[bus].values[origin].values[infoId];
+          var info = bhtransviz.routes[bus].values[origin_id].values[infoId];
+
+          var neighborhood = null;
 
           // get neighborhood
-          var neighborhoodList = bhtransviz.neighborhood[info.NOM_LOGR];
-          var neighborhood;
-          if (typeof neighborhoodList !== 'undefined' && neighborhoodList.length > 0) {
-            neighborhood = neighborhoodList[0];
-          }
-          else
-          {
+          var neighborhood = bhtransviz.neighborhood[info.NOM_LOGR];
+          if (typeof neighborhood === 'undefined'){
+            console.debug("Street has no neighborhood " + info.NOM_LOGR);
             continue;
           }
 
+          if(from == null)
+          {
+            from = neighborhood.value
+          }
+
           // add neighborhood to previous array
-          previous.push(neighborhood);
-
-
+          previous[neighborhood.value] = true;
         }
 
-
+        // Add previous lines
+        bhtransviz.connectPoints(from,previous,line);
       }
-
     }
-
-
   }
 
   // adds a connection from all the previous locations to 'to'
-  bhtransviz.connectToPrevious = function(to, previous) {
+  bhtransviz.connectPoints = function(from, previous,bus) {
+    var newFrom = null;
+    var newPrevious = {}
+    for(id in previous){
 
+      if (newFrom === null && from !== id) {
+        from = id;
+      }
+
+      // bhtransviz.addConnection(from,id,bus);
+      newPrevious[id] = true;
+    }
+
+    if(newPrevious.length > 1 && newFrom) {
+      bhtransviz.connectPoints(previous[1],newPrevious,bus);
+    }
   }
 
   // adds or updates matrix connections
@@ -87,16 +99,16 @@
 
   // load neighborhood data
   d3.csv('/data/rua-bairros.csv')
-    .row(function(d) { return {key: d.LOGRADOURO, value: d.BAIRRO}; })
+    .row(function(d) { 
+      var value = {key: d.LOGRADOURO, value: d.BAIRRO};
+      bhtransviz.neighborhood[d.LOGRADOURO] = value;
+      return value; 
+    })
     .get(function(error, rows) {
 
       if (error) {
         console.log(error);
       }
-      else {
-        bhtransviz.neighborhood = rows;
-      }
-
   });
 
   // load routes
