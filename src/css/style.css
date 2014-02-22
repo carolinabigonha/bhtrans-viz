@@ -1,0 +1,19 @@
+h1, p {
+  font-family: georgia, "times new roman", times, serif;
+  margin: 10px 20px;
+}
+
+h1 {
+  font-weight: normal;
+  color: #444;
+}
+
+p {
+  font-size:14px;
+  color: #666;
+}
+
+.container {
+  width: 600px;
+  margin: 40px auto;
+}
