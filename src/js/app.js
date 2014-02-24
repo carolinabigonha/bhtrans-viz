@@ -3,138 +3,107 @@
   var bhtransviz = window.bhtransviz || {};
   window.bhtransviz = bhtransviz;
 
-  // neighborhood database
-  bhtransviz.neighborhood = {};
+  // index of each node
+  bhtransviz.nodes = {};
 
-  // connection between neighborhoods
-  bhtransviz.routes = {};
+  // number of nodes
+  bhtransviz.n = 0;
 
-  // connection between neighborhoods
+  // graph connections
   bhtransviz.matrix = [];
-
-  // connections between neigtborhoods
-  bhtransviz.connections = {};
-
-  // constructs the connection matrix
-  bhtransviz.loadMatrix = function() {
-
-    for (bus in bhtransviz.routes) {
-
-      // bus 
-      var line = bhtransviz.routes[bus].key;
-      console.log("Linha: " + line);
-
-      for (origin_id in bhtransviz.routes[bus].values) {
-
-        // stores the previous neighborhoods
-        var from = null;
-        var previous = {};
-
-        for (infoId in bhtransviz.routes[bus].values[origin_id].values) {
-
-          var info = bhtransviz.routes[bus].values[origin_id].values[infoId];
-
-          var neighborhood = null;
-
-          // get neighborhood
-          var neighborhood = bhtransviz.neighborhood[info.NOM_LOGR];
-          if (typeof neighborhood === 'undefined'){
-            console.debug("Street has no neighborhood " + info.NOM_LOGR);
-            continue;
-          }
-
-          if(from == null)
-          {
-            from = neighborhood.value
-          }
-
-          // add neighborhood to previous array
-          previous[neighborhood.value] = true;
-        }
-
-        // Add previous lines
-        bhtransviz.connectPoints(from,previous,line);
-      }
-    }
-  }
-
-  // adds a connection from all the previous locations to 'to'
-  bhtransviz.connectPoints = function(from, previous,bus) {
-    var newFrom = null;
-    var newPrevious = {}
-    for(id in previous){
-
-      if (newFrom === null && from !== id) {
-        from = id;
-      }
-
-      bhtransviz.addConnection(from,id,bus);
-      newPrevious[id] = true;
-    }
-
-    if(newPrevious.length > 1 && newFrom) {
-      bhtransviz.connectPoints(previous[1],newPrevious,bus);
-    }
-  }
-
-  // adds or updates matrix connections
-  bhtransviz.addConnection = function(from, to, bus) {
-
-    var conn = [];
-    conn = bhtransviz.connections[from+"#"+to];
-    if(conn === undefined){
-      conn = [];
-    }
-
-    // conn.push(bus);
-    bhtransviz.connections[from+"#"+to] = bus;
-
-    var object = {};
-    object.from = from;
-    object.to = to;
-    object.options = conn;
-
-    bhtransviz.matrix.push(object);
-  }
 
   // draws the visualization
   bhtransviz.draw = function() {
-    console.log(bhtransviz.matrix);
+
+    var margin = { top: 10, right: 20, bottom: 10, left: 20 };
+    var width = 600,
+        height = 600;
+    var grid = width/bhtransviz.n;
+    var z = d3.scale.linear().domain([0, 4]).clamp(true);
+
+    var svg = d3.select('#viz').append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('class', 'routes')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+
+    svg.append("rect")
+      .attr("class", "background")
+      .attr("width", width)
+      .attr("height", height);
+
+    var row = svg.selectAll(".row")
+      .data(bhtransviz.matrix)
+      .enter().append("g")
+      .attr("class", "row")
+      .attr("transform", function(d, i) { return "translate(0," + i*grid + ")"; })
+      .each(row);
+
+    // row.append("line")
+    //     .attr("x2", width);
+
+    var column = svg.selectAll(".column")
+      .data(bhtransviz.matrix)
+      .enter().append("g")
+      .attr("class", "column")
+      .attr("transform", function(d, i) { return "translate(" + i*grid + ")rotate(-90)"; });
+
+    // column.append("line")
+    //   .attr("x1", -width);
+
+    function row(row) {
+      var cell = d3.select(this).selectAll(".cell")
+        .data(row.filter(function(d) {
+          return d.z.length;
+        }))
+        .enter().append("rect")
+        .attr("class", "cell")
+        .attr("x", function(d) { return grid*d.x; })
+        .attr("width", grid)
+        .attr("height", grid)
+        .style("fill-opacity", function(d) { return z(d.z.length); })
+        .on("mouseover", mouseover)
+        .on("mouseout", mouseout);
+    }
+
+    // mouse out of cell
+    function mouseover() {
+
+    }
+
+    // mouse out of cell
+    function mouseout() {
+
+    }
+
   }
 
-  // load neighborhood data
-  d3.csv('/data/rua-bairros.csv')
-    .row(function(d) { 
-      var value = {key: d.LOGRADOURO, value: d.BAIRRO};
-      bhtransviz.neighborhood[d.LOGRADOURO] = value;
-      return value; 
-    })
-    .get(function(error, rows) {
-
-      if (error) {
-        console.log(error);
-      }
-  });
-
-  // load routes
-  d3.tsv('/data/bhtrans_publico/BHTRANS_ITI.TXT', function(error, data) {
+  d3.json('/data/neighborhood_graph.json', function(error, data) {
 
     if (error) {
-      console.log(error);
+      console.error(error);
     }
     else {
 
-      // nest routes by bus line
-      bhtransviz.routes = d3.nest()
-        .key(function(d) { return d.COD_LINH; })
-        .key(function(d) { return d.NUM_PONT_CTRL_ORIG; })
-        .entries(data);
+      // load data
+      bhtransviz.nodes = data.nodes;
+      bhtransviz.n = bhtransviz.nodes.length;
 
-      // load matrix of connections
-      bhtransviz.loadMatrix();
+      // format matrix as an array of arrays
+      bhtransviz.nodes.forEach(function(node, i) {
+        bhtransviz.matrix[i] = d3.range(bhtransviz.n).map(function(j) { return {x: j, y: i, z: []}; });
+      });
 
-      // draw visualization
-      bhtransviz.draw();
+      for (m in data.matrix) {
+        for (n in data.matrix[m]) {
+          bhtransviz.matrix[m][n] = {x: m, y: n, z: data.matrix[m][n]};
+        }
+      }
+
+      // draw visualziation
+      bhtransviz.draw()
+
     }
 
   });
