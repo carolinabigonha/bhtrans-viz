@@ -39,7 +39,7 @@ class CreateGraph:
         # node index
         self.__node_i = 0
 
-        # logging 
+        # logging
         logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
     def __load_neighborhood(self):
@@ -48,7 +48,7 @@ class CreateGraph:
         nf.readline() # skip first line
         for l in nf.readlines():
             line = l.strip().split(',')
-            
+
             # TODO considerar o numero tb
             if line[LOGRADOURO] not in self.__neighborhood_dic.keys():
                 self.__neighborhood_dic[line[LOGRADOURO]] = line[BAIRRO]
@@ -56,7 +56,7 @@ class CreateGraph:
         nf.close()
 
     def __load_routes(self):
-        
+
         # load file
         rf = open('bhtrans_publico/BHTRANS_ITI.TXT')
         rf.readline() # skip first line
@@ -72,17 +72,17 @@ class CreateGraph:
             line = l.strip().split('\t')
 
             logging.debug('%s',line)
-    
+
             # read line data
             bus_line = line[COD_LINH]
             bus_name = line[NOM_LINH]
             origin = line[NUM_PONT_CTRL_ORIG]
-            city = line[NOM_MUNC] 
+            city = line[NOM_MUNC]
             street = line[NOM_LOGR]
-                    
+
             # if line or origin changes
             if bus_line != prev_line or origin != prev_orig:
-                
+
                 logging.debug('Reseting start point.')
 
                 # reset list of previous nodes
@@ -94,7 +94,7 @@ class CreateGraph:
 
             # try to get the neighborhood
             neighborhood =  self.__get_neighborhood(street)
-                
+
             if not neighborhood:
                 logging.info('Unknown neighborhood: %s', street)
                 continue
@@ -104,7 +104,7 @@ class CreateGraph:
 
                 # update reference
                 prev_nb = neighborhood
-                    
+
                 # add new node to list and retrieve its index
                 new_node = self.__add_node(neighborhood)
 
@@ -117,37 +117,40 @@ class CreateGraph:
 
                     # add node to previous nodes list
                     prev_nodes.append(new_node)
- 
+
     # get the neighborhood of a given street
     def __get_neighborhood(self, street):
-    
+
         neighborhood = None
         if street in self.__neighborhood_dic:
             neighborhood = self.__neighborhood_dic[street]
         return neighborhood
-                    
-    # add node to index 
+
+    # add node to index
     def __add_node(self, neighborhood):
 
         if neighborhood not in self.__nodes.keys():
 
             logging.debug('New node: %s, %d', neighborhood,self.__node_i)
-            
+
             node = {}
             node['index'] = self.__node_i
             node['name'] = neighborhood
             self.__nodes[neighborhood] = node
             self.__node_i += 1
-     
+
         return self.__nodes[neighborhood]['index']
 
     # add connections from all previous nodes to new neighborhood
     def __add_connections(self, prev_nodes, new_node, bus_line, bus_name):
 
         for node in prev_nodes:
-            
+
+            if node == new_node:
+                continue
+
             logging.debug('New connection: %d -> %d', node, new_node)
-            
+
             connection = {}
             connection['COD_LINH'] = bus_line
             connection['NOM_LINH'] = bus_name
@@ -158,23 +161,23 @@ class CreateGraph:
             # new connection
             if new_node not in self.__matrix[node].keys():
                 self.__matrix[node][new_node] = []
-                
+
             # add connection
             self.__matrix[node][new_node].append(connection)
 
     # dump matrix
     def __dump_matrix(self):
-        
+
         result = {}
         result['nodes'] = self.__nodes.values()
         result['matrix'] = self.__matrix
-        
-        out = open('neighborhood_graph.json', 'w')
+
+        out = open('graph.json', 'w')
         out.write(json.dumps(result))
 
-    # run 
+    # run
     def run(self):
-        
+
         self.__load_neighborhood()
         self.__load_routes()
         self.__dump_matrix()

@@ -12,6 +12,9 @@
   // graph connections
   bhtransviz.matrix = [];
 
+  // max number of connections
+  bhtransviz.max = 0;
+
   // draws the visualization
   bhtransviz.draw = function() {
 
@@ -19,13 +22,15 @@
     var width = 600,
         height = 600;
     var grid = width/bhtransviz.n;
-    var z = d3.scale.linear().domain([0, 4]).clamp(true);
+    var colorScale = d3.scale.quantize()
+      .domain([1, bhtransviz.max])
+      .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
 
     var svg = d3.select('#viz').append('svg')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
         .append('g')
-        .attr('class', 'routes')
+        .attr('class', 'routes Spectral')
         .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 
     svg.append("rect")
@@ -58,11 +63,12 @@
           return d.z.length;
         }))
         .enter().append("rect")
-        .attr("class", "cell")
+        .attr("class", function(d) {
+          return "cell " + colorScale(d.z.length);
+        })
         .attr("x", function(d) { return grid*d.x; })
         .attr("width", grid)
         .attr("height", grid)
-        .style("fill-opacity", function(d) { return z(d.z.length); })
         .on("mouseover", mouseover)
         .on("mouseout", mouseout);
     }
@@ -79,7 +85,7 @@
 
   }
 
-  d3.json('/data/neighborhood_graph.json', function(error, data) {
+  d3.json('/data/graph.json', function(error, data) {
 
     if (error) {
       console.error(error);
@@ -98,6 +104,7 @@
       for (m in data.matrix) {
         for (n in data.matrix[m]) {
           bhtransviz.matrix[m][n] = {x: m, y: n, z: data.matrix[m][n]};
+          if (bhtransviz.max < data.matrix[m][n].length) { bhtransviz.max = data.matrix[m][n].length; }
         }
       }
 
