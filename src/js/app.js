@@ -33,54 +33,34 @@
         .attr('class', 'routes Spectral')
         .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 
-    svg.append("rect")
+    svg.append('rect')
       .attr("class", "background")
       .attr("width", width)
       .attr("height", height);
 
     var row = svg.selectAll(".row")
-      .data(bhtransviz.matrix)
+        .data(bhtransviz.matrix)
       .enter().append("g")
-      .attr("class", "row")
-      .attr("transform", function(d, i) { return "translate(0," + i*grid + ")"; })
-      .each(row);
+        .attr("class", "row")
+        .attr("transform", function(d, i) {
+          return "translate(0," + grid*i + ")";
+        }).each(drawY)
 
-    // row.append("line")
-    //     .attr("x2", width);
+    function drawY(row) {
 
-    var column = svg.selectAll(".column")
-      .data(bhtransviz.matrix)
-      .enter().append("g")
-      .attr("class", "column")
-      .attr("transform", function(d, i) { return "translate(" + i*grid + ")rotate(-90)"; });
-
-    // column.append("line")
-    //   .attr("x1", -width);
-
-    function row(row) {
       var cell = d3.select(this).selectAll(".cell")
         .data(row.filter(function(d) {
-          return d.z.length;
+          return d.z;
         }))
-        .enter().append("rect")
-        .attr("class", function(d) {
-          return "cell " + colorScale(d.z.length);
+      .enter().append("rect")
+        .attr("x", function(d) {
+          return grid*d.x;
         })
-        .attr("x", function(d) { return grid*d.x; })
         .attr("width", grid)
         .attr("height", grid)
-        .on("mouseover", mouseover)
-        .on("mouseout", mouseout);
-    }
-
-    // mouse out of cell
-    function mouseover() {
-
-    }
-
-    // mouse out of cell
-    function mouseout() {
-
+        .attr("class", function(d) {
+          return "cell " + colorScale(d.z.length);
+        });
     }
 
   }

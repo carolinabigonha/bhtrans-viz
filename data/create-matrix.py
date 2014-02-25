@@ -58,7 +58,7 @@ class CreateGraph:
     def __load_routes(self):
 
         # load file
-        rf = open('bhtrans_publico/BHTRANS_ITI.TXT')
+        rf = open('bhtrans_publico/BHTRANS_sample.txt')
         rf.readline() # skip first line
 
         # previous line read, previous origin read
