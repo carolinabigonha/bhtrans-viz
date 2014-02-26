@@ -24,7 +24,7 @@
     var grid = width/bhtransviz.n;
     var colorScale = d3.scale.quantize()
       .domain([1, bhtransviz.max])
-      .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+      .range(d3.range(1,10).map(function(i) { return "q" + i + "-10"; }));
 
     var svg = d3.select('#viz').append('svg')
         .attr('width', width + margin.left + margin.right)
@@ -38,29 +38,23 @@
       .attr("width", width)
       .attr("height", height);
 
-    var row = svg.selectAll(".row")
+    var column = svg.selectAll(".column")
         .data(bhtransviz.matrix)
       .enter().append("g")
         .attr("class", "row")
         .attr("transform", function(d, i) {
-          return "translate(0," + grid*i + ")";
+          return "translate(" + grid*i + ",0)";
         }).each(drawY)
 
-    function drawY(row) {
+    function drawY(column) {
 
       var cell = d3.select(this).selectAll(".cell")
-        .data(row.filter(function(d) {
-          return d.z;
-        }))
+        .data(column.filter(function(d) { return d.z.length > 0; }))
       .enter().append("rect")
-        .attr("x", function(d) {
-          return grid*d.x;
-        })
+        .attr("y", function(d) { return grid*d.y; })
         .attr("width", grid)
         .attr("height", grid)
-        .attr("class", function(d) {
-          return "cell " + colorScale(d.z.length);
-        });
+        .attr("class", function(d) { return "cell " + d.x + "," + d.y + " " + d.z.length + " " + colorScale(d.z.length); });
     }
 
   }
@@ -78,13 +72,15 @@
 
       // format matrix as an array of arrays
       bhtransviz.nodes.forEach(function(node, i) {
-        bhtransviz.matrix[i] = d3.range(bhtransviz.n).map(function(j) { return {x: j, y: i, z: []}; });
+        bhtransviz.matrix[i] = d3.range(bhtransviz.n).map(function(j) { return {x: i, y: j, z: []}; });
       });
 
       for (m in data.matrix) {
         for (n in data.matrix[m]) {
-          bhtransviz.matrix[m][n] = {x: m, y: n, z: data.matrix[m][n]};
-          if (bhtransviz.max < data.matrix[m][n].length) { bhtransviz.max = data.matrix[m][n].length; }
+          m = +m;
+          n = +n;
+          bhtransviz.matrix[n][m].z = data.matrix[m][n];
+          if (bhtransviz.max < bhtransviz.matrix[n][m].z.length) { bhtransviz.max = bhtransviz.matrix[n][m].z.length; }
         }
       }
 

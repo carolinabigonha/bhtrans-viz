@@ -44,7 +44,7 @@ class CreateGraph:
 
     def __load_neighborhood(self):
 
-        nf = open('rua-bairros.csv')
+        nf = open('bairros.csv')
         nf.readline() # skip first line
         for l in nf.readlines():
             line = l.strip().split(',')
@@ -58,7 +58,7 @@ class CreateGraph:
     def __load_routes(self):
 
         # load file
-        rf = open('bhtrans_publico/BHTRANS_sample.txt')
+        rf = open('bhtrans_publico/BHTRANS_ITI.TXT')
         rf.readline() # skip first line
 
         # previous line read, previous origin read
@@ -111,12 +111,13 @@ class CreateGraph:
                 # avoid replication
                 if new_node not in prev_nodes:
 
+                    # add node to previous nodes list
+                    prev_nodes.append(new_node)
+
                     # add all connecting nodes
                     self.__add_connections(prev_nodes, new_node,
                             bus_line, bus_name)
 
-                    # add node to previous nodes list
-                    prev_nodes.append(new_node)
 
     # get the neighborhood of a given street
     def __get_neighborhood(self, street):
@@ -145,9 +146,6 @@ class CreateGraph:
     def __add_connections(self, prev_nodes, new_node, bus_line, bus_name):
 
         for node in prev_nodes:
-
-            if node == new_node:
-                continue
 
             logging.debug('New connection: %d -> %d', node, new_node)
 
