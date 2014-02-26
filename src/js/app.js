@@ -25,14 +25,13 @@
 
     var colorScale = d3.scale.quantize()
       .domain([1,10])
-      .range(d3.range(1,10).map(function(i) { return "q" + i + "-10"; }));
+      .range(d3.range(0,9).map(function(i) { return "q" + i + "-9"; }));
 
     var svg = d3.select('#viz').append('svg')
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
+        .attr('width', width)
+        .attr('height', height)
         .append('g')
-        .attr('class', 'routes Spectral')
-        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+        .attr('class', 'routes YlGnBu');
 
     svg.append('rect')
       .attr("class", "background")
@@ -47,26 +46,24 @@
           return "translate(" + grid*i + ",0)";
         }).each(drawY)
 
-    // function drawY(column) {
-    //   var cell = d3.select(this).selectAll(".cell")
-    //     .data(column.filter(function(d) { return d.z.length > 0; }))
-    //   .enter().append("rect")
-    //     .attr("y", function(d) { return grid*d.y; })
-    //     .attr("width", grid)
-    //     .attr("height", grid)
-    //     .attr("class", function(d) { return "cell " + d.x + "," + d.y + " " + d.z.length + " " + colorScale(d.z.length); });
-    // }
-
-     function drawY(column) {
+    function drawY(column) {
       var cell = d3.select(this).selectAll(".cell")
         .data(column.filter(function(d) { return d.z.length > 0; }))
-      .enter().append("circle")
-        .attr("cy", function(d) { return grid*d.y; })
-        .attr("r", function(d) {
-          return d.z.length;
-        })
+      .enter().append("rect")
+        .attr("y", function(d) { return grid*d.y; })
+        .attr("width", grid)
+        .attr("height", grid)
         .attr("class", function(d) { return "cell " + d.x + "," + d.y + " " + d.z.length + " " + colorScale(d.z.length); });
     }
+
+    //  function drawY(column) {
+    //   var cell = d3.select(this).selectAll(".cell")
+    //     .data(column.filter(function(d) { return d.z.length > 0; }))
+    //   .enter().append("circle")
+    //     .attr("cy", function(d) { return grid*d.y; })
+    //     .attr("r", grid)
+    //     .attr("class", function(d) { return "cell " + d.x + "," + d.y + " " + d.z.length + " " + colorScale(d.z.length); });
+    // }
 
   }
 
