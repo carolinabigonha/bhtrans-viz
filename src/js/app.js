@@ -22,8 +22,9 @@
     var width = 600,
         height = 600;
     var grid = width/bhtransviz.n;
+
     var colorScale = d3.scale.quantize()
-      .domain([1, bhtransviz.max])
+      .domain([1,10])
       .range(d3.range(1,10).map(function(i) { return "q" + i + "-10"; }));
 
     var svg = d3.select('#viz').append('svg')
@@ -41,19 +42,29 @@
     var column = svg.selectAll(".column")
         .data(bhtransviz.matrix)
       .enter().append("g")
-        .attr("class", "row")
+        .attr("class", "column")
         .attr("transform", function(d, i) {
           return "translate(" + grid*i + ",0)";
         }).each(drawY)
 
-    function drawY(column) {
+    // function drawY(column) {
+    //   var cell = d3.select(this).selectAll(".cell")
+    //     .data(column.filter(function(d) { return d.z.length > 0; }))
+    //   .enter().append("rect")
+    //     .attr("y", function(d) { return grid*d.y; })
+    //     .attr("width", grid)
+    //     .attr("height", grid)
+    //     .attr("class", function(d) { return "cell " + d.x + "," + d.y + " " + d.z.length + " " + colorScale(d.z.length); });
+    // }
 
+     function drawY(column) {
       var cell = d3.select(this).selectAll(".cell")
         .data(column.filter(function(d) { return d.z.length > 0; }))
-      .enter().append("rect")
-        .attr("y", function(d) { return grid*d.y; })
-        .attr("width", grid)
-        .attr("height", grid)
+      .enter().append("circle")
+        .attr("cy", function(d) { return grid*d.y; })
+        .attr("r", function(d) {
+          return d.z.length;
+        })
         .attr("class", function(d) { return "cell " + d.x + "," + d.y + " " + d.z.length + " " + colorScale(d.z.length); });
     }
 

@@ -111,12 +111,12 @@ class CreateGraph:
                 # avoid replication
                 if new_node not in prev_nodes:
 
-                    # add node to previous nodes list
-                    prev_nodes.append(new_node)
-
                     # add all connecting nodes
                     self.__add_connections(prev_nodes, new_node,
                             bus_line, bus_name)
+
+                    # add node to previous nodes list
+                    prev_nodes.append(new_node)
 
 
     # get the neighborhood of a given street
