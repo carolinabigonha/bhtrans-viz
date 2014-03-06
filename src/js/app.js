@@ -15,7 +15,7 @@
   // max number of connections
   bhtransviz.max = 0;
 
-  // draws the visualization
+  // draw the visualization
   bhtransviz.draw = function() {
 
     var margin = { top: 10, right: 20, bottom: 10, left: 20 };
@@ -25,7 +25,7 @@
 
     var colorScale = d3.scale.quantize()
       .domain([1,10])
-      .range(d3.range(0,9).map(function(i) { return "q" + i + "-9"; }));
+      .range(d3.range(0,9).map(function(i) { return 'q' + i + '-9'; }));
 
     var svg = d3.select('#viz').append('svg')
         .attr('width', width)
@@ -34,36 +34,71 @@
         .attr('class', 'routes YlGnBu');
 
     svg.append('rect')
-      .attr("class", "background")
-      .attr("width", width)
-      .attr("height", height);
+      .attr('class', 'background')
+      .attr('width', width)
+      .attr('height', height);
 
-    var column = svg.selectAll(".column")
+    var column = svg.selectAll('.column')
         .data(bhtransviz.matrix)
-      .enter().append("g")
-        .attr("class", "column")
-        .attr("transform", function(d, i) {
-          return "translate(" + grid*i + ",0)";
-        }).each(drawY)
+      .enter().append('g')
+        .attr('class', 'column')
+        .attr('transform', function(d, i) {
+          return 'translate(' + grid*i + ',0)';
+        }).each(drawColumn)
 
-    function drawY(column) {
-      var cell = d3.select(this).selectAll(".cell")
+    function drawColumn(column) {
+      var cell = d3.select(this).selectAll('.cell')
         .data(column.filter(function(d) { return d.z.length > 0; }))
-      .enter().append("rect")
-        .attr("y", function(d) { return grid*d.y; })
-        .attr("width", grid)
-        .attr("height", grid)
-        .attr("class", function(d) { return "cell " + d.x + "," + d.y + " " + d.z.length + " " + colorScale(d.z.length); });
+      .enter().append('rect')
+        .attr('y', function(d) { return grid*d.y; })
+        .attr('width', grid)
+        .attr('height', grid)
+        .attr('class', function(d) { return 'cell ' + colorScale(d.z.length); })
+        .on('mouseover', mouseover)
+        .on('mouseout', mouseout);
     }
 
-    //  function drawY(column) {
-    //   var cell = d3.select(this).selectAll(".cell")
-    //     .data(column.filter(function(d) { return d.z.length > 0; }))
-    //   .enter().append("circle")
-    //     .attr("cy", function(d) { return grid*d.y; })
-    //     .attr("r", grid)
-    //     .attr("class", function(d) { return "cell " + d.x + "," + d.y + " " + d.z.length + " " + colorScale(d.z.length); });
-    // }
+    function mouseover(cell) {
+
+      // from neighborhood
+      d3.select('#tooltip-from')
+      .text(bhtransviz.nodes[cell.x].name);
+
+      // to neighborhood
+      d3.select('#tooltip-to')
+      .text(bhtransviz.nodes[cell.y].name);
+
+      // number of lines
+      d3.select('#tooltip-connections')
+      .text(cell.z.length);
+
+      // bus list
+      var list = d3.select('#bus-list')
+        .selectAll('li')
+        .data(cell.z);
+
+      // enter
+      list.enter()
+        .append('li')
+        .attr('class', 'bus-item')
+        .text(function(d) {
+          return d.COD_LINH + ': ' + d.NOM_LINH;
+        });
+
+      // enter + update
+      list.text(function(d) {
+          return d.COD_LINH + ': ' + d.NOM_LINH;
+      });
+
+      // exit
+      list.exit().remove();
+
+      d3.select('#detail').classed('hidden', false);
+    }
+
+    function mouseout() {
+      d3.select('#detail').classed('hidden', true);
+    }
 
   }
 

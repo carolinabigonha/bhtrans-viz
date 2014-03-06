@@ -60,6 +60,7 @@ a:hover {
 .side {
   width: 320px;
   float: left;
+  margin-left: 20px;
 }
 
 .footer {
@@ -73,6 +74,44 @@ a:hover {
 
 .vizualization {
   margin-top: 20px;
+}
+
+.detail {
+  font-size: .9em;
+}
+
+.hidden {
+  display: none;
+}
+
+.tooltip-ttl {
+  font-size: 1.1em;
+  font-weight: 300;
+  margin: 0;
+}
+
+.tooltip-nb {
+  color: #225EA8;
+  font-style: normal;
+}
+
+.bus-item {
+  margin-top: 10px;
+  list-style: none;
+  color: #666;
+}
+
+.bus-list {
+  margin: 0;
+  padding-left: 0;
+  font-size: .9em;
+}
+
+.bus-number {
+  font-style: normal;
+  font-weight: bold;
+  color: #225EA8;
+  font-size:1.1em;
 }
 
 /* This product includes color specifications and designs developed by Cynthia Brewer (http://colorbrewer.org/). */
