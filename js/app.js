@@ -120,7 +120,7 @@
 
   }
 
-  d3.json('../data/graph.json', function(error, data) {
+  d3.json('data/graph.json', function(error, data) {
 
     if (error) {
       console.error(error);
