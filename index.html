@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Conexões entre bairros de Belo Horizonte</title>
+
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="container clearfix">
+
+    <h1>Panorama de conexões entre bairros de Belo Horizonte</h1>
+
+    <p class="instructions">Os bairros de Belo Horizonte são bem conectados por linhas de ônibus? Quantas e quais linhas de ônibus levam passageiros de um bairro a outro?</p>
+
+    <div class="whole">
+      <h2>Matriz de conexões entre bairros</h2>
+      <p class="instructions">Matriz de adjacência de um grafo em que os nodos são bairros de Belo Horizonte e as arestas são linhas de ônibus que conectam um bairro a outro.</p>
+      <div id="viz"></div>
+
+    </div>
+
+    <div class="side">
+      <h2>Linhas de Ônibus</h2>
+      <p class="instructions">Passe o mouse pela visualização e veja quais são as linhas de ônibus que conectam dois bairros.</p>
+      <div id="detail" class="detail hidden">
+        <h3 class="tooltip-ttl">
+          <em id="tooltip-from" class="tooltip-nb"></em> a
+          <em id="tooltip-to" class="tooltip-nb"></em>
+        </h3>
+        <p class="tooltip-value"><span id="tooltip-connections"></span> linhas:</p>
+        <ul id="bus-list" class="bus-list"></ul>
+      </div>
+    </div>
+
+  <div class="footer">
+    Por <a target="_blank" href="http://github.com/carolinabigonha">carolinabigonha</a> e
+    <a target="_blank" href="http://github.com/gcouti">gcouti</a>. Disponível no <a target="_blank" href="http://github.com/carolinabigonha/bhtrans-viz">GitHub</a>.
+  </div>
+
+  </div>
+
+
+  <script src="js/libs/d3.v3.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

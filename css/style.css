@@ -1,0 +1,125 @@
+body {
+  font-family: 'Open Sans', Tahoma, sans-serif;
+  font-size: 100%;
+}
+
+h1 {
+  font-size: 1.8em;
+  font-weight: normal;
+  color: #444;
+  font-weight: 300;
+  margin: 40px 0;
+}
+
+h2 {
+  font-size: 1.4em;
+  font-weight: normal;
+  color: #444;
+  font-weight: 300;
+  margin: 0 0 20px 0;
+}
+
+.instructions {
+  color: #666;
+  font-family: Georgia, serif;
+  color: #666;
+  font-size: .875em;
+  line-height: 1.5em;
+  margin-bottom: 40px;
+}
+
+a, a:visited {
+  color: #225EA8;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.clearfix:after {
+   content: " "; /* Older browser do not support empty content */
+   visibility: hidden;
+   display: block;
+   height: 0;
+   clear: both;
+}
+
+.container {
+  width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.whole {
+  width: 600px;
+  margin: 0 20px 30px 0;
+  float: left;
+}
+
+.side {
+  width: 320px;
+  float: left;
+  margin-left: 20px;
+}
+
+.footer {
+  font-size: .9em;
+  clear:both;
+}
+
+.routes {
+  fill: #fafafa;
+}
+
+.vizualization {
+  margin-top: 20px;
+}
+
+.detail {
+  font-size: .9em;
+}
+
+.hidden {
+  display: none;
+}
+
+.tooltip-ttl {
+  font-size: 1.1em;
+  font-weight: 100;
+  margin: 0;
+}
+
+.tooltip-nb {
+  color: #225EA8;
+  font-style: normal;
+}
+
+.cod-linh {
+  margin-top: 10px;
+  list-style: none;
+  color: #666;
+}
+
+.nom-subl {
+  line-height: 1.5em;
+  display: block;
+  color: #999;
+}
+
+.bus-list {
+  margin: 0;
+  padding-left: 0;
+  font-size: .9em;
+}
+
+/* This product includes color specifications and designs developed by Cynthia Brewer (http://colorbrewer.org/). */
+.YlOrRd .q0-9{fill:rgb(255,255,204)}
+.YlOrRd .q1-9{fill:rgb(255,237,160)}
+.YlOrRd .q2-9{fill:rgb(254,217,118)}
+.YlOrRd .q3-9{fill:rgb(254,178,76)}
+.YlOrRd .q4-9{fill:rgb(253,141,60)}
+.YlOrRd .q5-9{fill:rgb(252,78,42)}
+.YlOrRd .q6-9{fill:rgb(227,26,28)}
+.YlOrRd .q7-9{fill:rgb(189,0,38)}
+.YlOrRd .q8-9{fill:rgb(128,0,38)}
