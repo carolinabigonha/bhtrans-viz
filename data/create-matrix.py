@@ -74,14 +74,15 @@ class CreateGraph:
             logging.debug('%s',line)
 
             # read line data
-            bus_line = line[COD_LINH]
-            bus_name = line[NOM_LINH]
+            cod_linh = line[COD_LINH]
+            nom_linh = line[NOM_LINH]
             origin = line[NUM_PONT_CTRL_ORIG]
+            nom_subl = line[NOM_SUBL]
             city = line[NOM_MUNC]
-            street = line[NOM_LOGR]
+            nom_logr = line[NOM_LOGR]
 
             # if line or origin changes
-            if bus_line != prev_line or origin != prev_orig:
+            if cod_linh != prev_line or origin != prev_orig:
 
                 logging.debug('Reseting start point.')
 
@@ -89,14 +90,14 @@ class CreateGraph:
                 prev_nodes = []
 
                 # set control variables
-                prev_line = bus_line
+                prev_line = cod_linh
                 prev_orig = origin
 
             # try to get the neighborhood
-            neighborhood =  self.__get_neighborhood(street)
+            neighborhood =  self.__get_neighborhood(nom_logr)
 
             if not neighborhood:
-                logging.info('Unknown neighborhood: %s', street)
+                logging.info('Unknown neighborhood: %s', nom_logr)
                 continue
 
             # if on a different neighborhood
@@ -113,18 +114,18 @@ class CreateGraph:
 
                     # add all connecting nodes
                     self.__add_connections(prev_nodes, new_node,
-                            bus_line, bus_name)
+                            cod_linh, nom_linh, nom_subl)
 
                     # add node to previous nodes list
                     prev_nodes.append(new_node)
 
 
     # get the neighborhood of a given street
-    def __get_neighborhood(self, street):
+    def __get_neighborhood(self, nom_logr):
 
         neighborhood = None
-        if street in self.__neighborhood_dic:
-            neighborhood = self.__neighborhood_dic[street]
+        if nom_logr in self.__neighborhood_dic:
+            neighborhood = self.__neighborhood_dic[nom_logr]
         return neighborhood
 
     # add node to index
@@ -143,15 +144,16 @@ class CreateGraph:
         return self.__nodes[neighborhood]['index']
 
     # add connections from all previous nodes to new neighborhood
-    def __add_connections(self, prev_nodes, new_node, bus_line, bus_name):
+    def __add_connections(self, prev_nodes, new_node, cod_linh, nom_linh, nom_subl):
 
         for node in prev_nodes:
 
             logging.debug('New connection: %d -> %d', node, new_node)
 
             connection = {}
-            connection['COD_LINH'] = bus_line
-            connection['NOM_LINH'] = bus_name
+            connection['COD_LINH'] = cod_linh
+            connection['NOM_LINH'] = nom_linh.title()
+            connection['NOM_SUBL'] = nom_subl.title()
 
             if node not in self.__matrix:
                 self.__matrix[node] = {}

@@ -86,7 +86,7 @@ a:hover {
 
 .tooltip-ttl {
   font-size: 1.1em;
-  font-weight: 300;
+  font-weight: 100;
   margin: 0;
 }
 
@@ -95,10 +95,16 @@ a:hover {
   font-style: normal;
 }
 
-.bus-item {
+.cod-linh {
   margin-top: 10px;
   list-style: none;
   color: #666;
+}
+
+.nom-subl {
+  line-height: 1.5em;
+  display: block;
+  color: #999;
 }
 
 .bus-list {
@@ -107,41 +113,13 @@ a:hover {
   font-size: .9em;
 }
 
-.bus-number {
-  font-style: normal;
-  font-weight: bold;
-  color: #225EA8;
-  font-size:1.1em;
-}
-
 /* This product includes color specifications and designs developed by Cynthia Brewer (http://colorbrewer.org/). */
-.Spectral .q10-10{fill:rgb(158,1,66)}
-.Spectral .q9-10{fill:rgb(213,62,79)}
-.Spectral .q8-10{fill:rgb(244,109,67)}
-.Spectral .q7-10{fill:rgb(253,174,97)}
-.Spectral .q6-10{fill:rgb(254,224,139)}
-.Spectral .q5-10{fill:rgb(230,245,152)}
-.Spectral .q4-10{fill:rgb(171,221,164)}
-.Spectral .q3-10{fill:rgb(102,194,165)}
-.Spectral .q2-10{fill:rgb(50,136,189)}
-.Spectral .q1-10{fill:rgb(94,79,162)}
-
-.BuPu .q0-9{fill:rgb(247,252,253)}
-.BuPu .q1-9{fill:rgb(224,236,244)}
-.BuPu .q2-9{fill:rgb(191,211,230)}
-.BuPu .q3-9{fill:rgb(158,188,218)}
-.BuPu .q4-9{fill:rgb(140,150,198)}
-.BuPu .q5-9{fill:rgb(140,107,177)}
-.BuPu .q6-9{fill:rgb(136,65,157)}
-.BuPu .q7-9{fill:rgb(129,15,124)}
-.BuPu .q8-9{fill:rgb(77,0,75)}
-
-.YlGnBu .q0-9{fill:rgb(255,255,217)}
-.YlGnBu .q1-9{fill:rgb(237,248,177)}
-.YlGnBu .q2-9{fill:rgb(199,233,180)}
-.YlGnBu .q3-9{fill:rgb(127,205,187)}
-.YlGnBu .q4-9{fill:rgb(65,182,196)}
-.YlGnBu .q5-9{fill:rgb(29,145,192)}
-.YlGnBu .q6-9{fill:rgb(34,94,168)}
-.YlGnBu .q7-9{fill:rgb(37,52,148)}
-.YlGnBu .q8-9{fill:rgb(8,29,88)}Yl
+.YlOrRd .q0-9{fill:rgb(255,255,204)}
+.YlOrRd .q1-9{fill:rgb(255,237,160)}
+.YlOrRd .q2-9{fill:rgb(254,217,118)}
+.YlOrRd .q3-9{fill:rgb(254,178,76)}
+.YlOrRd .q4-9{fill:rgb(253,141,60)}
+.YlOrRd .q5-9{fill:rgb(252,78,42)}
+.YlOrRd .q6-9{fill:rgb(227,26,28)}
+.YlOrRd .q7-9{fill:rgb(189,0,38)}
+.YlOrRd .q8-9{fill:rgb(128,0,38)}

@@ -31,7 +31,7 @@
         .attr('width', width)
         .attr('height', height)
         .append('g')
-        .attr('class', 'routes YlGnBu');
+        .attr('class', 'routes YlOrRd');
 
     svg.append('rect')
       .attr('class', 'background')
@@ -47,6 +47,7 @@
         }).each(drawColumn)
 
     function drawColumn(column) {
+
       var cell = d3.select(this).selectAll('.cell')
         .data(column.filter(function(d) { return d.z.length > 0; }))
       .enter().append('rect')
@@ -68,27 +69,44 @@
       d3.select('#tooltip-to')
       .text(bhtransviz.nodes[cell.y].name);
 
+      // grouping bus lines
+      var busLines = d3.nest()
+        .key(function(d) { return d.COD_LINH; })
+        .entries(cell.z);
+
       // number of lines
       d3.select('#tooltip-connections')
-      .text(cell.z.length);
+      .text(busLines.length);
 
       // bus list
       var list = d3.select('#bus-list')
         .selectAll('li')
-        .data(cell.z);
+        .data(busLines);
 
-      // enter
+      // enter bus code
       list.enter()
         .append('li')
-        .attr('class', 'bus-item')
+        .attr('class', 'cod-linh')
         .text(function(d) {
-          return d.COD_LINH + ': ' + d.NOM_LINH;
+          return d.key;
         });
 
       // enter + update
       list.text(function(d) {
-          return d.COD_LINH + ': ' + d.NOM_LINH;
+          return d.key;
       });
+
+      // enter line/subline name
+      list.selectAll('div')
+        .data(function(d) {
+          return d.values;
+        })
+        .enter()
+        .append('div')
+        .attr('class', 'nom-subl')
+        .text(function(d) {
+          return d.NOM_LINH + ' - ' + d.NOM_SUBL;
+        });
 
       // exit
       list.exit().remove();
