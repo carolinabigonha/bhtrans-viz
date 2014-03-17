@@ -18,15 +18,18 @@
   // draw the visualization
   bhtransviz.draw = function() {
 
+    // variables
     var margin = { top: 10, right: 20, bottom: 10, left: 20 };
     var width = 600,
         height = 600;
     var grid = width/bhtransviz.n;
 
+    // color scale
     var colorScale = d3.scale.quantize()
       .domain([1,10])
       .range(d3.range(0,9).map(function(i) { return 'q' + i + '-9'; }));
 
+    // matrix
     var svg = d3.select('#viz').append('svg')
         .attr('width', width)
         .attr('height', height)
@@ -38,13 +41,42 @@
       .attr('width', width)
       .attr('height', height);
 
+    // draws each column
     var column = svg.selectAll('.column')
         .data(bhtransviz.matrix)
       .enter().append('g')
         .attr('class', 'column')
         .attr('transform', function(d, i) {
           return 'translate(' + grid*i + ',0)';
-        }).each(drawColumn)
+        }).each(drawColumn);
+
+    // legend
+    var legend = d3.select('#legend').append('svg')
+      .attr('width', width)
+      .attr('height', 18)
+      .append('g')
+      .attr('class', 'legend YlOrRd');
+
+    legend.selectAll('.legend-item')
+      .data(colorScale.range())
+    .enter().append('rect')
+      .attr("width", 18)
+      .attr("height", 18)
+      .attr("x", 20)
+      .attr('class', function(d) { return d; })
+      .attr("transform", function(d, i) { return "translate(" + i * 20 + ", 0)"; });
+
+    legend.append("text")
+      .attr("x", 0)
+      .attr("y", 15)
+      .attr('class', 'legend-text')
+      .text('1');
+
+    legend.append("text")
+      .attr("x", 210)
+      .attr("y", 15)
+      .attr('class', 'legend-text')
+      .text('> 10');
 
     function drawColumn(column) {
 
