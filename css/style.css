@@ -19,6 +19,14 @@ h2 {
   margin: 0 0 20px 0;
 }
 
+h3 {
+  font-size: 1.2em;
+  font-weight: normal;
+  color: #444;
+  font-weight: 300;
+  margin: 20px 0;
+}
+
 .instructions {
   color: #666;
   font-family: Georgia, serif;
@@ -111,6 +119,10 @@ a:hover {
   margin: 0;
   padding-left: 0;
   font-size: .9em;
+}
+
+.legend-text {
+  font-size: .8em;
 }
 
 /* This product includes color specifications and designs developed by Cynthia Brewer (http://colorbrewer.org/). */
